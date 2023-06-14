@@ -2,6 +2,9 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
+// npm ls <package-name> will give you the most details about the dependency graph of a dependency.
+// npm outdated --depth=n will analyze installed NPM-packages and their versions.
+
 module.exports = (env, argv) => {
   console.log('env: ', env);
   console.log('argv: ', argv);
