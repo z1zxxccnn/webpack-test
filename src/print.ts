@@ -1,4 +1,4 @@
-import Icon from './icon.svg';
+import Icon from './icon_carrot.svg';
 
 export default function printMe() {
   console.log('I get called from print.ts!');
