@@ -5,12 +5,12 @@ function drag_element(elmnt: HTMLElement, elmnt_header: HTMLElement) {
   elmnt_header.onmousedown = drag_mouse_down;
 
   function drag_mouse_down(e: MouseEvent) {
-    const rect = elmnt.getBoundingClientRect();
-    console.log(`test panel root drag check, rect: ${JSON.stringify(rect)}, x: ${e.clientX}, y: ${e.clientY}`)
     e.preventDefault();
+
     // get the mouse cursor position at startup:
     ori_x = e.clientX;
     ori_y = e.clientY;
+    
     document.onmouseup = close_drag_element;
     // call a function whenever the cursor moves:
     document.onmousemove = element_drag;
@@ -56,10 +56,13 @@ function drag_element(elmnt: HTMLElement, elmnt_header: HTMLElement) {
 export function create_test_panel() {
   const main_div = document.createElement('div');
   main_div.id = module.test_panel_root;
+
   const main_div_header = document.createElement('div');
   main_div_header.id = module.test_panel_root_header;
   main_div_header.innerHTML = 'Click here to move';
   main_div.appendChild(main_div_header);
+
   document.body.appendChild(main_div);
+
   drag_element(main_div, main_div_header);
 }
