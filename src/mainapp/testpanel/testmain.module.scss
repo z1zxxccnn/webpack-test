@@ -1,0 +1,22 @@
+$root_min_width: 200px;
+$root_min_height: 200px;
+
+#test_panel_root {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  width: $root_min_width;
+  height: $root_min_height;
+  min-width: $root_min_width;
+  min-height: $root_min_height;
+  border: 1px solid black;
+  resize: both;
+  overflow: auto;
+}
+
+#test_panel_root_header {
+  padding: 10px;
+  cursor: move;
+  background-color: #2196F3;
+  color: #ffffff;
+}

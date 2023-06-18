@@ -13,8 +13,6 @@ import CsvData from './data.csv';
 
 window.g_testCsvData = CsvData
 
-var worker = null;
-
 function btnOnClick() {
   import('./print.js')
     .then(({ default: printMe }) => {
@@ -45,4 +43,8 @@ function component() {
   return element;
 }
 
-document.body.appendChild(component());
+//document.body.appendChild(component());
+
+import { main_entry } from './mainapp/entry'
+
+main_entry()

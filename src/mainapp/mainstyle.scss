@@ -1,0 +1,15 @@
+$bg_color: red;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  height: 100%;
+  background-color: $bg_color;
+}
+
+#main_canvas {
+  background-color: white;
+}
