@@ -41,7 +41,6 @@
     "@babylonjs/procedural-textures": "^6.7.0",
     "@babylonjs/serializers": "^6.7.0",
     "@types/lodash": "^4.14.195",
-    "es6-promise": "^4.2.8",
     "lodash": "^4.17.21"
   }
 }
