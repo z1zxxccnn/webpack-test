@@ -55,6 +55,11 @@ module.exports = (env, argv) => {
     module: {
       rules: [
         {
+          test: /\.jsx?$/,
+          use: ["babel-loader"],
+          exclude: /node_modules/,
+        },
+        {
           test: /\.tsx?$/,
           use: 'ts-loader',
           exclude: /node_modules/,
@@ -74,7 +79,7 @@ module.exports = (env, argv) => {
       ],
     },
     resolve: {
-      extensions: ['.tsx', '.ts', '.js'],
+      extensions: ['.tsx', '.ts', '.jsx', '.js'],
     },
   };
 };
