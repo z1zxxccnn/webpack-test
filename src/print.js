@@ -1,22 +1,23 @@
-import Icon from './icon_carrot.svg';
+import Icon from './icon_carrot.svg'
 
-export default function printMe() {
-  console.log('I get called from print.js!');
+export default function printMe () {
+  console.log('I get called from print.js!')
 
-  const element = document.getElementById('test_div');
-  if (element) {
+  const element = document.getElementById('test_div')
+  if (element !== null) {
     // Add the image to our existing div.
-    const myIcon = new Image();
-    myIcon.src = Icon;
-    myIcon.width = 40;
-    myIcon.height = 40;
-
-    element.appendChild(myIcon);
+    const myIcon = new Image()
+    myIcon.src = Icon
+    myIcon.width = 40
+    myIcon.height = 40
+    element.appendChild(myIcon)
   }
 
   import('./print2.ts')
     .then(({ default: printTS }) => {
-      printTS('from js');
+      printTS('from js')
     })
-    .catch((error) => 'An error occurred while loading the component');
+    .catch((error) => {
+      console.log('An error occurred while loading print2.ts', error)
+    })
 }

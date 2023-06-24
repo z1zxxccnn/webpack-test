@@ -1,43 +1,51 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-//const WorkboxPlugin = require('workbox-webpack-plugin');
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
+// const WorkboxPlugin = require('workbox-webpack-plugin');
 
-// npm ls <package-name> will give you the most details about the dependency graph of a dependency.
-// npm outdated --depth=n will analyze installed NPM-packages and their versions.
+// npm ls <package-name> will give you the most details
+// about the dependency graph of a dependency, npm outdated --depth=n
+// will analyze installed NPM-packages and their versions.
 
 module.exports = (env, argv) => {
-  console.log('env: ', env);
-  console.log('argv: ', argv);
+  console.log('env: ', env)
+  console.log('argv: ', argv)
 
   return {
     mode: 'development',
     entry: {
       index: './src/index.js',
-      another: './src/another-module.js',
+      another: './src/another-module.js'
     },
     devtool: 'inline-source-map',
     devServer: {
       static: './dist',
-      port: 9090,
+      port: 9090
     },
     plugins: [
       new HtmlWebpackPlugin({
         title: 'Development',
-        favicon: './src/favicon.svg',
-      }),/*
+        favicon: './src/favicon.svg'
+      }),
+      new ESLintPlugin({
+        extensions: ['.tsx', '.ts', '.jsx', '.js']
+      })
+      /*
       // Must be accessed via http://127.0.0.1:8080
-      // Go to the URL: chrome://serviceworker-internals/ and unregister a serviceworker when you remove the workbox.
+      // Go to the URL: chrome://serviceworker-internals/ and
+      // unregister a serviceworker when you remove the workbox.
       new WorkboxPlugin.GenerateSW({
         // these options encourage the ServiceWorkers to get in there fast
         // and not allow any straggling "old" SWs to hang around
         clientsClaim: true,
         skipWaiting: true,
-      }),*/
+      }),
+      */
     ],
     output: {
       filename: '[name].[contenthash].js', // [contenthash] for caching
       path: path.resolve(__dirname, 'dist'),
-      clean: true,
+      clean: true
     },
     optimization: {
       moduleIds: 'deterministic', // fix module.id for caching
@@ -45,41 +53,36 @@ module.exports = (env, argv) => {
       splitChunks: {
         cacheGroups: {
           vendor: {
-            test: /[\\\/]node_modules[\\\/]/,
+            test: /[\\/]node_modules[\\/]/,
             name: 'vendors',
-            chunks: 'all',
-          },
-        },
-      }, // split node_modules
+            chunks: 'all'
+          }
+        }
+      } // split node_modules
     },
     module: {
       rules: [
         {
-          test: /\.jsx?$/,
-          use: ["babel-loader"],
-          exclude: /node_modules/,
-        },
-        {
-          test: /\.tsx?$/,
-          use: 'ts-loader',
-          exclude: /node_modules/,
+          test: /\.(ts|js)x?$/i,
+          use: ['babel-loader'],
+          exclude: /node_modules/
         },
         {
           test: /\.(scss|css)$/i,
-          use: ['style-loader', 'css-loader', 'sass-loader'],
+          use: ['style-loader', 'css-loader', 'sass-loader']
         },
         {
           test: /\.(png|svg|jpg|jpeg|gif)$/i,
-          type: 'asset/resource',
+          type: 'asset/resource'
         },
         {
           test: /\.(csv|tsv)$/i,
-          use: ['csv-loader'],
-        },
-      ],
+          use: ['csv-loader']
+        }
+      ]
     },
     resolve: {
-      extensions: ['.tsx', '.ts', '.jsx', '.js'],
-    },
-  };
-};
+      extensions: ['.tsx', '.ts', '.jsx', '.js']
+    }
+  }
+}

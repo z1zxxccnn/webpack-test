@@ -1,1 +1,1 @@
-console.log('Another module loaded!');
+console.log('Another module loaded!')
