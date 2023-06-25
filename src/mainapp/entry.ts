@@ -1,5 +1,5 @@
 import './mainstyle.scss'
-import { create_test_panel } from './testpanel/testmain'
+import { createTestPanel } from './testpanel/testmain'
 import {
   Engine, type WebGPUEngine, Scene, Vector3,
   FreeCamera, HemisphericLight, MeshBuilder
@@ -8,7 +8,7 @@ import {
 let engine: null | Engine | WebGPUEngine = null
 let scene: null | Scene = null
 
-export function main_entry (): void {
+export function mainEntry (): void {
   const canvas = document.createElement('canvas')
   canvas.id = 'main_canvas'
 
@@ -17,7 +17,7 @@ export function main_entry (): void {
 
   document.body.appendChild(canvas)
 
-  create_test_panel()
+  createTestPanel()
 
   function updateCanvasSize (): void {
     canvas.style.width = String(window.innerWidth) + 'px'

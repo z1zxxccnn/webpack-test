@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'
 
-export function test_react_ts (eid: string): void {
+export function testReactTs (eid: string): void {
   const container = document.getElementById(eid)
   if (container !== null) {
     const element = (

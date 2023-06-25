@@ -21,8 +21,6 @@ module.exports = {
         avoidEscape: true
       }
     ],
-    camelcase: 0,
-    '@typescript-eslint/naming-convention': 0,
     'react/react-in-jsx-scope': 0
   },
   // The parserOptions described in the official documentation are for

@@ -1,9 +1,9 @@
 import './style.css'
 import CsvData from './data.csv'
-import { test_react_js } from './testreact.jsx'
-import { test_react_ts } from './testreact.tsx'
+import { testReactJs } from './testreact.jsx'
+import { testReactTs } from './testreact.tsx'
 
-import { main_entry } from './mainapp/entry'
+import { mainEntry } from './mainapp/entry'
 
 // if ('serviceWorker' in navigator) {
 //   window.addEventListener('load', () => {
@@ -51,20 +51,20 @@ function component () {
 
   element.appendChild(btn)
 
-  const e_react_js = document.createElement('div')
-  e_react_js.id = 'e_react_js'
-  element.appendChild(e_react_js)
+  const eReactJs = document.createElement('div')
+  eReactJs.id = 'e_react_js'
+  element.appendChild(eReactJs)
 
-  const e_react_ts = document.createElement('div')
-  e_react_ts.id = 'e_react_ts'
-  element.appendChild(e_react_ts)
+  const eReactTs = document.createElement('div')
+  eReactTs.id = 'e_react_ts'
+  element.appendChild(eReactTs)
 
   document.body.appendChild(element)
 
-  test_react_js('e_react_js')
-  test_react_ts('e_react_ts')
+  testReactJs('e_react_js')
+  testReactTs('e_react_ts')
 }
 
 // component()
 
-main_entry()
+mainEntry()

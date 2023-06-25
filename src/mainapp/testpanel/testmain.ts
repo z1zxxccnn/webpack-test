@@ -1,70 +1,70 @@
 import module from './testmain.module.scss'
 
-function drag_element (elmnt: HTMLElement, elmnt_header: HTMLElement): void {
-  let ori_x = 0; let ori_y = 0
-  elmnt_header.onmousedown = drag_mouse_down
+function dragElement (elmnt: HTMLElement, elmntHeader: HTMLElement): void {
+  let oriX = 0; let oriY = 0
+  elmntHeader.onmousedown = dragMouseDown
 
-  function drag_mouse_down (e: MouseEvent): void {
+  function dragMouseDown (e: MouseEvent): void {
     e.preventDefault()
 
     // get the mouse cursor position at startup:
-    ori_x = e.clientX
-    ori_y = e.clientY
+    oriX = e.clientX
+    oriY = e.clientY
 
-    document.onmouseup = close_drag_element
+    document.onmouseup = closeDragElement
     // call a function whenever the cursor moves:
-    document.onmousemove = element_drag
+    document.onmousemove = elementDrag
   }
 
-  function element_drag (e: MouseEvent): void {
+  function elementDrag (e: MouseEvent): void {
     e.preventDefault()
     // calculate the new cursor position:
-    const offset_x = ori_x - e.clientX
-    const offset_y = ori_y - e.clientY
-    ori_x = e.clientX
-    ori_y = e.clientY
-    let new_left = elmnt.offsetLeft - offset_x
-    let new_top = elmnt.offsetTop - offset_y
+    const offsetX = oriX - e.clientX
+    const offsetY = oriY - e.clientY
+    oriX = e.clientX
+    oriY = e.clientY
+    let newLeft = elmnt.offsetLeft - offsetX
+    let newTop = elmnt.offsetTop - offsetY
 
     // prevent out of parent rect
     if (elmnt.offsetParent !== null) {
-      const parent_rect = elmnt.offsetParent.getBoundingClientRect()
-      if (new_left + Math.abs(elmnt.offsetWidth) >= parent_rect.right) {
-        new_left = parent_rect.right - Math.abs(elmnt.offsetWidth)
+      const parentRect = elmnt.offsetParent.getBoundingClientRect()
+      if (newLeft + Math.abs(elmnt.offsetWidth) >= parentRect.right) {
+        newLeft = parentRect.right - Math.abs(elmnt.offsetWidth)
       }
-      if (new_top + Math.abs(elmnt.offsetHeight) >= parent_rect.bottom) {
-        new_top = parent_rect.bottom - Math.abs(elmnt.offsetHeight)
+      if (newTop + Math.abs(elmnt.offsetHeight) >= parentRect.bottom) {
+        newTop = parentRect.bottom - Math.abs(elmnt.offsetHeight)
       }
     }
-    if (new_left < 0) {
-      new_left = 0
+    if (newLeft < 0) {
+      newLeft = 0
     }
-    if (new_top < 0) {
-      new_top = 0
+    if (newTop < 0) {
+      newTop = 0
     }
 
     // set the element's new position:
-    elmnt.style.left = String(new_left) + 'px'
-    elmnt.style.top = String(new_top) + 'px'
+    elmnt.style.left = String(newLeft) + 'px'
+    elmnt.style.top = String(newTop) + 'px'
   }
 
-  function close_drag_element (): void {
+  function closeDragElement (): void {
     // stop moving when mouse button is released:
     document.onmouseup = null
     document.onmousemove = null
   }
 }
 
-export function create_test_panel (): void {
-  const main_div = document.createElement('div')
-  main_div.id = module.test_panel_root
+export function createTestPanel (): void {
+  const mainDiv = document.createElement('div')
+  mainDiv.id = module.test_panel_root
 
-  const main_div_header = document.createElement('div')
-  main_div_header.id = module.test_panel_root_header
-  main_div_header.innerHTML = 'Click here to move'
-  main_div.appendChild(main_div_header)
+  const mainDivHeader = document.createElement('div')
+  mainDivHeader.id = module.test_panel_root_header
+  mainDivHeader.innerHTML = 'Click here to move'
+  mainDiv.appendChild(mainDivHeader)
 
-  document.body.appendChild(main_div)
+  document.body.appendChild(mainDiv)
 
-  drag_element(main_div, main_div_header)
+  dragElement(mainDiv, mainDivHeader)
 }
