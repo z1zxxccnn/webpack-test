@@ -61,9 +61,16 @@ module.exports = (env, argv) => {
       } // split node_modules
     },
     module: {
+      // Here ts-loader will throw while babel-loader won't:
+      // const str: string = 42
       rules: [
         {
-          test: /\.(ts|js)x?$/i,
+          test: /\.tsx?$/i,
+          use: ['babel-loader', 'ts-loader'],
+          exclude: /node_modules/
+        },
+        {
+          test: /\.jsx?$/i,
           use: ['babel-loader'],
           exclude: /node_modules/
         },
@@ -72,7 +79,7 @@ module.exports = (env, argv) => {
           use: ['style-loader', 'css-loader', 'sass-loader']
         },
         {
-          test: /\.(png|svg|jpg|jpeg|gif)$/i,
+          test: /\.(svg|png|jpg|jpeg|gif)$/i,
           type: 'asset/resource'
         },
         {

@@ -2,7 +2,7 @@ import { join } from 'lodash'
 
 let worker = null
 
-export default function printJS (s) {
+export function printJS (s) {
   console.log(join(['print 2', 'js', 'call', s], ' '))
 
   if (worker === null) {

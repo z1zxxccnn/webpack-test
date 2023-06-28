@@ -1,4 +1,5 @@
 import { createRoot } from 'react-dom/client'
+import Icon from './icon_carrot.svg'
 
 export function testReactJs (eid) {
   const container = document.getElementById(eid)
@@ -7,6 +8,7 @@ export function testReactJs (eid) {
       <div>
         <h1>Hello, js react!</h1>
         <h2>Now is {new Date().toLocaleTimeString()}.</h2>
+        <img src={Icon} width="40" height="40" alt=""/>
       </div>
     )
     const root = createRoot(container)

@@ -2,7 +2,7 @@ import { join } from 'lodash'
 
 let worker: null | Worker = null
 
-export default function printTS (s: string): void {
+export function printTS (s: string): void {
   console.log(join(['print 2', 'ts', 'call', s], ' '))
 
   if (worker === null) {

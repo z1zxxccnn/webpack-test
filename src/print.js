@@ -14,8 +14,8 @@ export default function printMe () {
   }
 
   import('./print2.ts')
-    .then(({ default: printTS }) => {
-      printTS('from js')
+    .then((module) => {
+      module.printTS('from js')
     })
     .catch((error) => {
       console.log('An error occurred while loading print2.ts', error)
