@@ -1,4 +1,5 @@
-import { sum } from './sum-jest.ts'
+import { describe, expect, test } from '@jest/globals'
+import { sum } from './sum-jestts.ts'
 
 describe('ts sum module', () => {
   test('adds 1 + 2 to equal 3', () => {

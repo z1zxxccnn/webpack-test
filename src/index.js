@@ -1,7 +1,5 @@
 import './style.css'
 import CsvData from './data.csv'
-import { testReactJs } from './testreact.jsx'
-import { testReactTs } from './testreact.tsx'
 
 import { mainEntry } from './mainapp/entry'
 
@@ -51,18 +49,7 @@ function component () {
 
   element.appendChild(btn)
 
-  const eReactJs = document.createElement('div')
-  eReactJs.id = 'e_react_js'
-  element.appendChild(eReactJs)
-
-  const eReactTs = document.createElement('div')
-  eReactTs.id = 'e_react_ts'
-  element.appendChild(eReactTs)
-
   document.body.appendChild(element)
-
-  testReactJs('e_react_js')
-  testReactTs('e_react_ts')
 }
 
 // component()

@@ -1,3 +1,4 @@
+import { testReactTs } from './testreactts'
 import Icon from './icon_carrot.svg'
 
 export default function printMe (): void {
@@ -5,6 +6,14 @@ export default function printMe (): void {
 
   const element = document.getElementById('test_div')
   if (element !== null) {
+    const reactElem = document.getElementById('e_react_ts')
+    if (reactElem === null) {
+      const eReactTs = document.createElement('div')
+      eReactTs.id = 'e_react_ts'
+      element.appendChild(eReactTs)
+      testReactTs('e_react_ts')
+    }
+
     // Add the image to our existing div.
     const myIcon = new Image()
     myIcon.src = Icon
