@@ -58,3 +58,31 @@ LinkJs.propTypes = {
   page: PropTypes.string,
   children: PropTypes.string
 }
+
+export function CheckboxWithLabelJs (
+  {
+    labelOn,
+    labelOff
+  }
+) {
+  const [isChecked, setIsChecked] = useState(false)
+
+  const onChange = () => {
+    setIsChecked(!isChecked)
+  }
+
+  return (
+    <label>
+      <input type="checkbox" checked={isChecked} onChange={onChange} />
+      {isChecked ? labelOn : labelOff}
+    </label>
+  )
+}
+
+// By default all prop types aren't required
+// (i.e. allow null or undefined) unless you
+// pop a .isRequired on the end of them.
+CheckboxWithLabelJs.propTypes = {
+  labelOn: PropTypes.string,
+  labelOff: PropTypes.string
+}

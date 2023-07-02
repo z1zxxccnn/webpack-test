@@ -1,6 +1,7 @@
-import { it, expect } from '@jest/globals'
+import { it, expect, afterEach } from '@jest/globals'
 import renderer from 'react-test-renderer'
-import { LinkJs } from './testreactjs.jsx'
+import { cleanup, fireEvent, render } from '@testing-library/react'
+import { LinkJs, CheckboxWithLabelJs } from './testreactjs.jsx'
 
 it('changes the class when hovered', () => {
   const component = renderer.create(
@@ -24,4 +25,21 @@ it('changes the class when hovered', () => {
   // re-rendering
   tree = component.toJSON()
   expect(tree).toMatchSnapshot()
+})
+
+// Note: running cleanup afterEach is done automatically
+// for you in @testing-library/react@9.0.0 or higher
+// unmount and cleanup DOM after the test is finished.
+afterEach(cleanup)
+
+it('CheckboxWithLabel changes the text after click', () => {
+  const { queryByLabelText, getByLabelText } = render(
+    <CheckboxWithLabelJs labelOn="On" labelOff="Off" />
+  )
+
+  expect(queryByLabelText(/off/i)).toBeTruthy()
+
+  fireEvent.click(getByLabelText(/off/i))
+
+  expect(queryByLabelText(/on/i)).toBeTruthy()
 })

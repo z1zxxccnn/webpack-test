@@ -1,4 +1,5 @@
 module.exports = {
+  testEnvironment: 'jsdom',
   // Transforms tell jest how to process our non-javascript files.
   // Here we're using babel for .js and .jsx files, and ts-jest for
   // .ts and .tsx files.  You *can* just use babel-jest for both, if
