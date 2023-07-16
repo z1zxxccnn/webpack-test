@@ -2,7 +2,7 @@ import { testReactJs } from './testreactjs.jsx'
 import Icon from './icon_carrot.svg'
 
 export default function printMe () {
-  console.log('I get called from print.js!')
+  console.log('I get called from print js!')
 
   const element = document.getElementById('test_div')
   if (element !== null) {
@@ -22,11 +22,11 @@ export default function printMe () {
     element.appendChild(myIcon)
   }
 
-  import('./print2.ts')
+  import('./print2ts')
     .then((module) => {
       module.printTS('from js')
     })
     .catch((error) => {
-      console.log('An error occurred while loading print2.ts', error)
+      console.log('An error occurred while loading print2 ts', error)
     })
 }

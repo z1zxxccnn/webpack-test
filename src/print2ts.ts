@@ -7,14 +7,14 @@ export function printTS (s: string): void {
 
   if (worker === null) {
     console.log('ts create worker')
-    worker = new Worker(new URL('./deep-thought.js', import.meta.url))
+    worker = new Worker(new URL('./deep-thought-js.js', import.meta.url))
     worker.onmessage = ({ data: { answer } }) => {
-      console.log('from deep-thought.js', answer)
+      console.log('from deep thought js', answer)
     }
   }
   worker.postMessage({
     question:
       'The Answer to the Ultimate Question of Life, ' +
-      'The Universe, and Everything, from print2.ts.'
+      'The Universe, and Everything, from print2 ts.'
   })
 }

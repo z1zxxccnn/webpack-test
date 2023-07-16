@@ -18,14 +18,14 @@ import { mainEntry } from './mainapp/entry'
 window.g_testCsvData = CsvData
 
 function btnOnClick () {
-  import('./print.js')
+  import('./printjs.js')
     .then(({ default: printMe }) => {
       printMe()
     })
     .catch((error) => {
       console.log('An error occurred while loading print.js: ', error)
     })
-  import('./print.ts')
+  import('./printts')
     .then(({ default: printMe }) => {
       printMe()
     })
