@@ -59,9 +59,12 @@ export function mainEntry (): void {
   }
   scene = createScene() // Call the createScene function
   // Register a render loop to repeatedly render the scene
-  engine.runRenderLoop(function () {
-    if (scene !== null) {
-      scene.render()
-    }
-  })
+  // engine.runRenderLoop(function () {
+  //   scene?.render()
+  // })
+  // However, high fps may cause Safari's Inspector
+  // to be unable to connect to the web page.
+  window.setInterval(() => {
+    scene?.render()
+  }, 100)
 }
