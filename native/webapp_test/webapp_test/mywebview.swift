@@ -17,6 +17,7 @@ class MyWebViewController: UIViewController {
         let configuration = WKWebViewConfiguration()
         configuration.preferences = preferences
         self.myWebView_ = WKWebView(frame: CGRect.zero, configuration: configuration)
+        self.myWebView_?.isInspectable = true
         self.view = self.myWebView_
     }
 }
