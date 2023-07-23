@@ -19,6 +19,7 @@
 		F255FDF92A6D1B05001591F8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F255FDFB2A6D1B07001591F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F255FDFE2A6D1B07001591F8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F271DC142A6D2B4C00E3E5E9 /* webapp-test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "webapp-test-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +52,7 @@
 		F255FDF62A6D1B05001591F8 /* webapp_test */ = {
 			isa = PBXGroup;
 			children = (
+				F271DC142A6D2B4C00E3E5E9 /* webapp-test-Info.plist */,
 				F255FDF72A6D1B05001591F8 /* webapp_testApp.swift */,
 				F255FDF92A6D1B05001591F8 /* ContentView.swift */,
 				F255FDFB2A6D1B07001591F8 /* Assets.xcassets */,
@@ -270,6 +272,7 @@
 				DEVELOPMENT_TEAM = G4Q7HH7C4W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "webapp-test-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -299,6 +302,7 @@
 				DEVELOPMENT_TEAM = G4Q7HH7C4W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "webapp-test-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
