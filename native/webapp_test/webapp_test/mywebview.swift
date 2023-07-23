@@ -21,6 +21,7 @@ class MyWebViewController: UIViewController {
         let preferences = WKPreferences()
         let configuration = WKWebViewConfiguration()
         configuration.preferences = preferences
+        configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
         self.myWebView_ = WKWebView(frame: CGRect.zero, configuration: configuration)
         self.myWebView_?.isInspectable = true
         self.view = self.myWebView_
