@@ -9,8 +9,10 @@ import Foundation
 import WebKit
 import SwiftUI
 
-class MyWebViewController: UIViewController {
+class MyWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler, WKScriptMessageHandlerWithReply {
     var myWebView_: WKWebView? = nil
+    let myTestMsgName: String = "myTestMsgName"
+    let myTestMsgNameWithReply: String = "myTestMsgNameWithReply"
     
     deinit {
         self.cleanWebViewCache()
@@ -24,7 +26,32 @@ class MyWebViewController: UIViewController {
         configuration.websiteDataStore = WKWebsiteDataStore.nonPersistent()
         self.myWebView_ = WKWebView(frame: CGRect.zero, configuration: configuration)
         self.myWebView_?.isInspectable = true
+        self.myWebView_?.navigationDelegate = self
+        configuration.userContentController.add(self, name: self.myTestMsgName)
+        configuration.userContentController.addScriptMessageHandler(self, contentWorld: .page, name: self.myTestMsgNameWithReply)
         self.view = self.myWebView_
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        print("navigationType: \(navigationAction.navigationType), shouldPerformDownload: \(navigationAction.shouldPerformDownload), request.url: \(String(describing: navigationAction.request.url))")
+        if !navigationAction.shouldPerformDownload {
+            decisionHandler(.allow)
+        } else {
+            decisionHandler(.download)
+        }
+    }
+    
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        if message.name == self.myTestMsgName {
+            print("call \(self.myTestMsgName) message body: \(message.body)")
+        }
+    }
+    
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage, replyHandler: @escaping (Any?, String?) -> Void) {
+        if message.name == self.myTestMsgNameWithReply {
+            print("call \(self.myTestMsgNameWithReply) message body: \(message.body)")
+            replyHandler("This is a reply from \(self.myTestMsgNameWithReply)", nil)
+        }
     }
     
     func cleanWebViewCache() {
