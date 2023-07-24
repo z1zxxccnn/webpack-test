@@ -41,6 +41,34 @@ class MyWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessa
         }
     }
     
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        print("navigation from the main frame has started")
+    }
+    
+    func webView(_ webView: WKWebView, didReceiveServerRedirectForProvisionalNavigation navigation: WKNavigation!) {
+        print("the web view received a server redirect for a request")
+    }
+    
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        print("the web view has started to receive content for the main frame")
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        print("navigation is complete")
+    }
+    
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        print("an error occurred during navigation: \(error)")
+    }
+    
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        print("an error occurred during the early navigation process: \(error)")
+    }
+    
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        print("the web view’s content process was terminated")
+    }
+    
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         if message.name == self.myTestMsgName {
             print("call \(self.myTestMsgName) message body: \(message.body)")
