@@ -32,15 +32,6 @@ class MyWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessa
         self.view = self.myWebView_
     }
     
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        print("navigationType: \(navigationAction.navigationType), shouldPerformDownload: \(navigationAction.shouldPerformDownload), request.url: \(String(describing: navigationAction.request.url))")
-        if !navigationAction.shouldPerformDownload {
-            decisionHandler(.allow)
-        } else {
-            decisionHandler(.download)
-        }
-    }
-    
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         print("navigation from the main frame has started")
     }
