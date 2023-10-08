@@ -10,13 +10,31 @@ $root_min_height: 200px;
   min-width: $root_min_width;
   min-height: $root_min_height;
   border: 1px solid black;
-  resize: both;
   overflow: auto;
 }
 
 #test_panel_root_header {
-  padding: 10px;
-  cursor: move;
-  background-color: #2196F3;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+
+#test_panel_root_header_move {
+  text-align: center;
+  background-color: red;
+  border: 1px solid black;
   color: #ffffff;
+  flex-grow: 1;
+  padding: 10px;
+  cursor: pointer;
+}
+
+#test_panel_root_header_resize {
+  text-align: center;
+  background-color: red;
+  border: 1px solid black;
+  color: #ffffff;
+  flex-grow: 1;
+  padding: 10px;
+  cursor: pointer;
 }
