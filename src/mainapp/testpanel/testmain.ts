@@ -1,11 +1,21 @@
 import module from './testmain.module.scss'
 
+// function toLogContainer (msg: string): void {
+//   const logContainer = document.getElementById('LOG_CONTAINER')
+//   if (logContainer != null) {
+//     logContainer.textContent = `${msg}\n${logContainer.textContent ?? ''}`
+//   }
+// }
+
 function dragElement (elmnt: HTMLElement, elmntHeader: HTMLElement,
   moveOrResize: boolean): void {
   let oriX = 0; let oriY = 0
   let oriLeft = 0; let oriTop = 0
   let oriWidth = 0; let oriHeight = 0
-  elmntHeader.onmousedown = dragMouseDown
+  let curTouchId = 0
+
+  elmntHeader.addEventListener('mousedown', dragMouseDown)
+  elmntHeader.addEventListener('touchstart', dragTouchStart)
 
   const style = window.getComputedStyle(elmnt)
   const minW = Number(style.getPropertyValue('min-width').slice(0, -2))
@@ -15,9 +25,7 @@ function dragElement (elmnt: HTMLElement, elmntHeader: HTMLElement,
   const diffH = (elmnt.offsetHeight -
     Number(style.getPropertyValue('height').slice(0, -2)))
 
-  function dragMouseDown (e: MouseEvent): void {
-    e.preventDefault()
-
+  function onStart (e: MouseEvent | Touch): void {
     // get the mouse cursor position at startup:
     oriX = e.clientX
     oriY = e.clientY
@@ -25,14 +33,9 @@ function dragElement (elmnt: HTMLElement, elmntHeader: HTMLElement,
     oriTop = elmnt.offsetTop
     oriWidth = elmnt.offsetWidth
     oriHeight = elmnt.offsetHeight
-
-    document.onmouseup = closeDragElement
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag
   }
 
-  function elementDrag (e: MouseEvent): void {
-    e.preventDefault()
+  function onMoveOrResize (e: MouseEvent | Touch): void {
     // calculate the new cursor position:
     const offsetX = oriX - e.clientX
     const offsetY = oriY - e.clientY
@@ -88,10 +91,98 @@ function dragElement (elmnt: HTMLElement, elmntHeader: HTMLElement,
     }
   }
 
-  function closeDragElement (): void {
-    // stop moving when mouse button is released:
-    document.onmouseup = null
-    document.onmousemove = null
+  function dragMouseDown (e: MouseEvent): void {
+    e.preventDefault()
+
+    onStart(e)
+    document.addEventListener('mousemove', dragMouseMove)
+    document.addEventListener('mouseup', dragMouseUp)
+  }
+
+  function dragMouseMove (e: MouseEvent): void {
+    e.preventDefault()
+
+    onMoveOrResize(e)
+  }
+
+  function dragMouseUp (e: MouseEvent): void {
+    e.preventDefault()
+
+    document.removeEventListener('mousemove', dragMouseMove)
+    document.removeEventListener('mouseup', dragMouseUp)
+  }
+
+  function dragTouchStart (e: TouchEvent): void {
+    e.preventDefault()
+
+    if (curTouchId === 0) {
+      const touches = e.changedTouches
+      for (let i = 0; i < touches.length; i++) {
+        const touch = touches[0]
+        // @ts-expect-error for iOS Safari
+        // distinguishing finger vs Apple Pencil
+        // finger: direct, Apple Pencil: stylus
+        if (touch.touchType === 'direct') {
+          curTouchId = touch.identifier
+          onStart(touch)
+          elmntHeader.addEventListener('touchmove', dragTouchMove)
+          elmntHeader.addEventListener('touchend', dragTouchEnd)
+          elmntHeader.addEventListener('touchcancel', dragTouchCancel)
+          break
+        }
+      }
+    }
+  }
+
+  function dragTouchMove (e: TouchEvent): void {
+    e.preventDefault()
+
+    if (curTouchId !== 0) {
+      const touches = e.changedTouches
+      for (let i = 0; i < touches.length; i++) {
+        const touch = touches[0]
+        if (curTouchId === touch.identifier) {
+          onMoveOrResize(touch)
+          break
+        }
+      }
+    }
+  }
+
+  function dragTouchEnd (e: TouchEvent): void {
+    e.preventDefault()
+
+    if (curTouchId !== 0) {
+      const touches = e.changedTouches
+      for (let i = 0; i < touches.length; i++) {
+        const touch = touches[0]
+        if (curTouchId === touch.identifier) {
+          curTouchId = 0
+          elmntHeader.removeEventListener('touchmove', dragTouchMove)
+          elmntHeader.removeEventListener('touchend', dragTouchEnd)
+          elmntHeader.removeEventListener('touchcancel', dragTouchCancel)
+          break
+        }
+      }
+    }
+  }
+
+  function dragTouchCancel (e: TouchEvent): void {
+    e.preventDefault()
+
+    if (curTouchId !== 0) {
+      const touches = e.changedTouches
+      for (let i = 0; i < touches.length; i++) {
+        const touch = touches[0]
+        if (curTouchId === touch.identifier) {
+          curTouchId = 0
+          elmntHeader.removeEventListener('touchmove', dragTouchMove)
+          elmntHeader.removeEventListener('touchend', dragTouchEnd)
+          elmntHeader.removeEventListener('touchcancel', dragTouchCancel)
+          break
+        }
+      }
+    }
   }
 }
 
@@ -113,6 +204,11 @@ export function createTestPanel (): void {
   mainDivHeaderResize.id = module.test_panel_root_header_resize
   mainDivHeaderResize.innerHTML = 'RESIZE'
   mainDivHeader.appendChild(mainDivHeaderResize)
+
+  // const logContainer = document.createElement('pre')
+  // logContainer.id = 'LOG_CONTAINER'
+  // logContainer.style.backgroundColor = 'white'
+  // mainDiv.appendChild(logContainer)
 
   dragElement(mainDiv, mainDivHeaderMove, true)
   dragElement(mainDiv, mainDivHeaderResize, false)
