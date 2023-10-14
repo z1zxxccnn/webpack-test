@@ -119,10 +119,9 @@ function dragElement (elmnt: HTMLElement, elmntHeader: HTMLElement,
       const touches = e.changedTouches
       for (let i = 0; i < touches.length; i++) {
         const touch = touches[0]
-        // @ts-expect-error for iOS Safari
-        // distinguishing finger vs Apple Pencil
+        // for iOS Safari distinguishing finger vs Apple Pencil
         // finger: direct, Apple Pencil: stylus
-        if (touch.touchType === 'direct') {
+        if (!('touchType' in touch) || touch.touchType === 'direct') {
           curTouchId = touch.identifier
           onStart(touch)
           elmntHeader.addEventListener('touchmove', dragTouchMove)
