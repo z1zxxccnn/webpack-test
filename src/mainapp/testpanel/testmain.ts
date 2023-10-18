@@ -1,18 +1,13 @@
 import module from './testmain.module.scss'
-
-// function toLogContainer (msg: string): void {
-//   const logContainer = document.getElementById('LOG_CONTAINER')
-//   if (logContainer != null) {
-//     logContainer.textContent = `${msg}\n${logContainer.textContent ?? ''}`
-//   }
-// }
+import { testContentCreate } from './testcontent'
+import { toTestLog } from './testlog'
 
 function dragElement (elmnt: HTMLElement, elmntHeader: HTMLElement,
   moveOrResize: boolean): void {
   let oriX = 0; let oriY = 0
   let oriLeft = 0; let oriTop = 0
   let oriWidth = 0; let oriHeight = 0
-  let curTouchId = 0
+  let curTouchId: number | null = null
 
   elmntHeader.addEventListener('mousedown', dragMouseDown)
   elmntHeader.addEventListener('touchstart', dragTouchStart)
@@ -115,20 +110,23 @@ function dragElement (elmnt: HTMLElement, elmntHeader: HTMLElement,
   function dragTouchStart (e: TouchEvent): void {
     e.preventDefault()
 
-    if (curTouchId === 0) {
+    if (curTouchId === null) {
       const touches = e.changedTouches
-      for (let i = 0; i < touches.length; i++) {
+      if (touches.length > 0) {
         const touch = touches[0]
+        toTestLog(`touch.radiusX: ${touch.radiusX}`)
+        toTestLog(`touch.radiusY: ${touch.radiusY}`)
+        toTestLog(`touch.rotationAngle: ${touch.rotationAngle}`)
         // for iOS Safari distinguishing finger vs Apple Pencil
         // finger: direct, Apple Pencil: stylus
-        if (!('touchType' in touch) || touch.touchType === 'direct') {
-          curTouchId = touch.identifier
-          onStart(touch)
-          elmntHeader.addEventListener('touchmove', dragTouchMove)
-          elmntHeader.addEventListener('touchend', dragTouchEnd)
-          elmntHeader.addEventListener('touchcancel', dragTouchCancel)
-          break
+        if ('touchType' in touch) {
+          toTestLog(`touch.touchType: ${String(touch.touchType)}`)
         }
+        curTouchId = touch.identifier
+        onStart(touch)
+        elmntHeader.addEventListener('touchmove', dragTouchMove)
+        elmntHeader.addEventListener('touchend', dragTouchEnd)
+        elmntHeader.addEventListener('touchcancel', dragTouchCancel)
       }
     }
   }
@@ -136,7 +134,7 @@ function dragElement (elmnt: HTMLElement, elmntHeader: HTMLElement,
   function dragTouchMove (e: TouchEvent): void {
     e.preventDefault()
 
-    if (curTouchId !== 0) {
+    if (curTouchId !== null) {
       const touches = e.changedTouches
       for (let i = 0; i < touches.length; i++) {
         const touch = touches[0]
@@ -151,12 +149,12 @@ function dragElement (elmnt: HTMLElement, elmntHeader: HTMLElement,
   function dragTouchEnd (e: TouchEvent): void {
     e.preventDefault()
 
-    if (curTouchId !== 0) {
+    if (curTouchId !== null) {
       const touches = e.changedTouches
       for (let i = 0; i < touches.length; i++) {
         const touch = touches[0]
         if (curTouchId === touch.identifier) {
-          curTouchId = 0
+          curTouchId = null
           elmntHeader.removeEventListener('touchmove', dragTouchMove)
           elmntHeader.removeEventListener('touchend', dragTouchEnd)
           elmntHeader.removeEventListener('touchcancel', dragTouchCancel)
@@ -169,12 +167,12 @@ function dragElement (elmnt: HTMLElement, elmntHeader: HTMLElement,
   function dragTouchCancel (e: TouchEvent): void {
     e.preventDefault()
 
-    if (curTouchId !== 0) {
+    if (curTouchId !== null) {
       const touches = e.changedTouches
       for (let i = 0; i < touches.length; i++) {
         const touch = touches[0]
         if (curTouchId === touch.identifier) {
-          curTouchId = 0
+          curTouchId = null
           elmntHeader.removeEventListener('touchmove', dragTouchMove)
           elmntHeader.removeEventListener('touchend', dragTouchEnd)
           elmntHeader.removeEventListener('touchcancel', dragTouchCancel)
@@ -204,10 +202,11 @@ export function createTestPanel (): void {
   mainDivHeaderResize.innerHTML = 'RESIZE'
   mainDivHeader.appendChild(mainDivHeaderResize)
 
-  // const logContainer = document.createElement('pre')
-  // logContainer.id = 'LOG_CONTAINER'
-  // logContainer.style.backgroundColor = 'white'
-  // mainDiv.appendChild(logContainer)
+  const mainDivContent = document.createElement('div')
+  mainDivContent.id = module.test_panel_root_content
+  mainDiv.appendChild(mainDivContent)
+
+  testContentCreate(module.test_panel_root_content)
 
   dragElement(mainDiv, mainDivHeaderMove, true)
   dragElement(mainDiv, mainDivHeaderResize, false)

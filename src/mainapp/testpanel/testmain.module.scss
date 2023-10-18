@@ -3,20 +3,22 @@ $root_min_height: 200px;
 
 #test_panel_root {
   position: absolute;
-  top: 50px;
   left: 50px;
+  top: 50px;
   width: $root_min_width;
   height: $root_min_height;
   min-width: $root_min_width;
   min-height: $root_min_height;
-  border: 1px solid black;
-  overflow: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 #test_panel_root_header {
   display: flex;
   justify-content: center;
   align-items: stretch;
+  flex-grow: 0;
 }
 
 #test_panel_root_header_move {
@@ -37,4 +39,10 @@ $root_min_height: 200px;
   flex-grow: 1;
   padding: 10px;
   cursor: pointer;
+}
+
+#test_panel_root_content {
+  position: relative;
+  flex-grow: 1;
+  border: 1px solid black;
 }
