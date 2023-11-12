@@ -3,7 +3,8 @@ const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 
 const app = express()
-const config = require('./webpack.config.js')
+const config = require('./webpack.config.js')()
+console.log(`config: ${JSON.stringify(config)}`)
 config.output.publicPath = '/'
 const compiler = webpack(config)
 
@@ -15,7 +16,7 @@ app.use(
   })
 )
 
-// Serve the files on port 3000.
+// Serve the files on port 9090.
 app.listen(9090, function () {
   console.log('Example app listening on port 9090!\n')
 })
