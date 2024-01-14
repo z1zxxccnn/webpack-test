@@ -10,3 +10,7 @@ x64/
 x86/
 [Dd]ebug/
 [Rr]elease/
+
+# Visual C++ cache files
+ipch/
+*.aps
