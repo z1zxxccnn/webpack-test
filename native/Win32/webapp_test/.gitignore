@@ -1,0 +1,10 @@
+
+# Visual Studio 2015/2017 cache/options directory
+.vs/
+
+# User-specific files
+*.user
+
+# Build results
+x64/
+x86/

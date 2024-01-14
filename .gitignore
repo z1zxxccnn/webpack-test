@@ -19,7 +19,3 @@ node_modules/
 
 # For macOS
 .DS_Store
-
-# XCode
-DerivedData/
-xcuserdata/
