@@ -13,3 +13,8 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <string>
+#include <wrl.h>
+#include <wil/com.h>
+// include WebView2 header
+#include "WebView2.h"
