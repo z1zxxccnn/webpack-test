@@ -3,6 +3,7 @@
 
 #include "framework.h"
 #include "webapp_test.h"
+#include "HostObjectMainImpl.h"
 
 #define MAX_LOADSTRING 100
 
@@ -13,6 +14,9 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
 wil::com_ptr<ICoreWebView2Controller> webviewController;
 wil::com_ptr<ICoreWebView2> webview;
+wil::com_ptr<HostObjectMain> hostObject;
+
+static constexpr UINT s_runAsyncWindowMessage = WM_APP + 1;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -119,6 +123,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
                 if (FAILED(result)) {
                     std::wstring output = L"CreateCoreWebView2EnvironmentWithOptions failed: ";
                     output += std::to_wstring(result);
+                    output += L"\n";
                     OutputDebugString(output.c_str());
                     return S_OK;
                 }
@@ -129,6 +134,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
                         if (FAILED(result)) {
                             std::wstring output = L"CreateCoreWebView2Controller failed: ";
                             output += std::to_wstring(result);
+                            output += L"\n";
                             OutputDebugString(output.c_str());
                             return S_OK;
                         }
@@ -153,21 +159,29 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
                         webview->Navigate(L"https://www.bing.com/");
 
                         // Step 4 - Navigation events
-                        // register an ICoreWebView2NavigationStartingEventHandler to cancel any non-https navigation
                         EventRegistrationToken token;
                         webview->add_NavigationStarting(Microsoft::WRL::Callback<ICoreWebView2NavigationStartingEventHandler>(
                             [hWnd](ICoreWebView2* webview, ICoreWebView2NavigationStartingEventArgs* args) -> HRESULT {
+                                hostObject = Microsoft::WRL::Make<HostObjectMain>(
+                                    [hWnd](std::function<void(void)> callback) {
+                                        auto* task = new std::function<void()>(std::move(callback));
+                                        PostMessage(hWnd, s_runAsyncWindowMessage, reinterpret_cast<WPARAM>(task), 0);
+                                    });
+                                VARIANT remoteObjectAsVariant = {};
+                                hostObject.query_to<IDispatch>(&remoteObjectAsVariant.pdispVal);
+                                remoteObjectAsVariant.vt = VT_DISPATCH;
+                                webview->AddHostObjectToScript(L"main", &remoteObjectAsVariant);
+                                remoteObjectAsVariant.pdispVal->Release();
                                 return S_OK;
                             }).Get(), &token);
 
                         // Step 5 - Scripting
-                        // Schedule an async task to add initialization script that freezes the Object object
                         webview->AddScriptToExecuteOnDocumentCreated(L"console.log(\"call from webapp_test c++!\");", nullptr);
-                        // Schedule an async task to get the document URL
                         webview->ExecuteScript(L"window.document.URL;", Microsoft::WRL::Callback<ICoreWebView2ExecuteScriptCompletedHandler>(
                             [](HRESULT errorCode, LPCWSTR resultObjectAsJson) -> HRESULT {
                                 std::wstring output = L"ExecuteScript test: ";
                                 output += resultObjectAsJson;
+                                output += L"\n";
                                 OutputDebugString(output.c_str());
                                 return S_OK;
                             }).Get());
@@ -193,6 +207,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    case s_runAsyncWindowMessage:
+    {
+        auto* task = reinterpret_cast<std::function<void()>*>(wParam);
+        (*task)();
+        delete task;
+        return true;
+    }
+    break;
     case WM_COMMAND:
     {
         int wmId = LOWORD(wParam);

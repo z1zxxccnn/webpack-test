@@ -1,0 +1,34 @@
+import "oaidl.idl";
+import "ocidl.idl";
+
+[uuid(cc94a7d9-17ab-4088-b13e-d3f7770e216e), version(0.1)]
+library HostObjectMainLibrary
+{
+    //! [AddHostObjectInterface]
+    [uuid(6a8f3434-09e3-41c3-bce6-e33bba51f9ff), object, local]
+        interface IHostObjectMain : IUnknown
+    {
+        HRESULT MainInterface([in] BSTR stringParam, [out, retval] BSTR* stringRes);
+
+        // Demonstrate native calling back into JavaScript.
+        HRESULT TestCbAsyncWithStringAndInt([in] IDispatch* callbackParam);
+
+        // Demonstrate basic method call with some parameters.
+        HRESULT TestMethodWithStringAndInt([in] BSTR stringParam, [in] INT intParam);
+
+        // Demonstrate getting and setting a property.
+        [propget] HRESULT TestProperty([out, retval] BSTR* stringResult);
+        [propput] HRESULT TestProperty([in] BSTR stringValue);
+
+        [propget] HRESULT TestIndexedProperty(INT index, [out, retval] BSTR* stringResult);
+        [propput] HRESULT TestIndexedProperty(INT index, [in] BSTR stringValue);
+    };
+    //! [AddHostObjectInterface]
+
+    [uuid(08e94c20-150e-4ad5-adc5-73f63157ade6)]
+        coclass HostObjectMain
+    {
+        [default] interface IHostObjectMain;
+        interface IDispatch;
+    };
+}
