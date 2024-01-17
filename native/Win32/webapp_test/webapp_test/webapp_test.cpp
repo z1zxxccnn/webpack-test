@@ -156,7 +156,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
                         webviewController->put_Bounds(bounds);
 
                         // Schedule an async task to navigate to Bing
-                        webview->Navigate(L"https://www.bing.com/");
+                        webview->Navigate(L"http://127.0.0.1:9090/");
 
                         // Step 4 - Navigation events
                         EventRegistrationToken token;
