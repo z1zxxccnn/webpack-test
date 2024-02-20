@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
 fun MyContent(){
 
     // Declare a string that contains a url
-    val mUrl = "https://www.google.com/"
+    val mUrl = "http://127.0.0.1:9090/"
 
     // Adding a WebView inside AndroidView
     // with layout as full screen
@@ -45,6 +45,12 @@ fun MyContent(){
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            {
+                WebView.setWebContentsDebuggingEnabled(true)
+            }
+            settings.javaScriptEnabled = true
         }
     }, update = {
         it.loadUrl(mUrl)
