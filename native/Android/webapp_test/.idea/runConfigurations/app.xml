@@ -56,6 +56,7 @@
     <method v="2">
       <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       <option name="Android.Gradle.BeforeRunTask" enabled="true" goal=":app:uninstallAll" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="adbReverse9090" externalProjectPath="$PROJECT_DIR$/app" vmOptions="" scriptParameters="" />
     </method>
   </configuration>
 </component>
