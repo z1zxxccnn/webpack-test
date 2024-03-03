@@ -1,5 +1,6 @@
 package com.example.webapp_test
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
@@ -12,6 +13,11 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.webapp_test.ui.theme.Webapp_testTheme
@@ -44,12 +50,17 @@ class CustomWebViewClient : WebViewClient() {
     }
 }
 
-class AndroidJSInterface(private val context: Context) {
+class AndroidJSInterface(private val context: Context, private val activity: Activity?) {
 
     /** Show a toast from the web page  */
     @JavascriptInterface
     fun showToast(toast: String?) {
         Toast.makeText(context, toast, Toast.LENGTH_SHORT).show()
+    }
+
+    @JavascriptInterface
+    fun exitApp() {
+        activity?.finish()
     }
 
     @JavascriptInterface
@@ -68,10 +79,16 @@ fun MyContent() {
     // Declare a string that contains a url
     val mUrl = "http://127.0.0.1:9090/"
 
+    val activity = (LocalContext.current as? Activity)
+
+    var view: MutableState<WebView?> = remember { mutableStateOf(null) }
+
     // Adding a WebView inside AndroidView
     // with layout as full screen
     AndroidView(factory = {
         WebView(it).apply {
+            view.value = this
+
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
@@ -81,15 +98,26 @@ fun MyContent() {
 
             settings.javaScriptEnabled = true
 
-            addJavascriptInterface(AndroidJSInterface(it), "Android")
+            addJavascriptInterface(AndroidJSInterface(it, activity), "Android")
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 WebView.setWebContentsDebuggingEnabled(true)
             }
+
+            clearCache(true)
+            println("WebView enters the Composition")
         }
     }, update = {
         it.loadUrl(mUrl)
     })
+
+    DisposableEffect(view) {
+        onDispose {
+            view.value?.clearCache(true)
+            view.value = null
+            println("WebView leaves the Composition")
+        }
+    }
 }
 
 @Preview(showBackground = true)
