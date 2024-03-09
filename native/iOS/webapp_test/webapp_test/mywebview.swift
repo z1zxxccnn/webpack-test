@@ -29,6 +29,8 @@ class MyWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessa
         self.myWebView_?.navigationDelegate = self
         configuration.userContentController.add(self, name: self.myTestMsgName)
         configuration.userContentController.addScriptMessageHandler(self, contentWorld: .page, name: self.myTestMsgNameWithReply)
+        let userScript = WKUserScript(source: "console.log(\"WKWebView user script test!\")", injectionTime: .atDocumentStart, forMainFrameOnly: false)
+        configuration.userContentController.addUserScript(userScript)
         self.view = self.myWebView_
     }
     
