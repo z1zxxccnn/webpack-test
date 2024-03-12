@@ -8,13 +8,27 @@
 import Foundation
 import WebKit
 import SwiftUI
+import Combine
+
+enum MyWebViewAction {
+    case willTerminate
+}
+
+class MyWebViewLink: ObservableObject {
+    @Published var action: MyWebViewAction?
+    
+    func willTerminate() {
+        action = .willTerminate
+    }
+}
 
 class MyWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler, WKScriptMessageHandlerWithReply {
     var myWebView_: WKWebView? = nil
     let myTestMsgName: String = "myTestMsgName"
     let myTestMsgNameWithReply: String = "myTestMsgNameWithReply"
     
-    deinit {
+    func action(_ action: MyWebViewAction) {
+        print("MyWebViewController execute action: \(action)")
         self.cleanWebViewCache()
     }
     
@@ -89,12 +103,36 @@ class MyWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessa
 }
 
 struct MyWebViewControllerRep: UIViewControllerRepresentable {
+    var vcLink: MyWebViewLink
+    
+    class Coordinator {
+        var vcLink: MyWebViewLink? {
+            didSet {
+                cancelable = vcLink?.$action.sink(receiveValue: { (action) in
+                    guard let action = action else {
+                        return
+                    }
+                    self.viewController?.action(action)
+                })
+            }
+        }
+        var viewController: MyWebViewController?
+        
+        private var cancelable: AnyCancellable?
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator()
+    }
+    
     func makeUIViewController(context: Context) -> MyWebViewController {
         let controller = MyWebViewController()
         return controller
     }
     
     func updateUIViewController(_ uiViewController: MyWebViewController, context: Context) {
+        context.coordinator.viewController = uiViewController
+        context.coordinator.vcLink = vcLink
         if let url = URL(string: "http://127.0.0.1:9090/") {
             uiViewController.myWebView_?.load(URLRequest(url: url))
         }
