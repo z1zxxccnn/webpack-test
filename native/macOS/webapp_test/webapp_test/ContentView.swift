@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var vcLink = MyWebViewLink()
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
-        }
-        .padding()
+        MyWebViewControllerRep(vcLink: vcLink)
+            .ignoresSafeArea(edges: .all)
+            .onReceive(NotificationCenter.default.publisher(for: NSApplication.willTerminateNotification), perform: { _ in
+                print("receive willTerminateNotification")
+                vcLink.willTerminate()
+            })
     }
 }
 

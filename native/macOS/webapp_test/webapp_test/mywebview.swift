@@ -22,7 +22,7 @@ class MyWebViewLink: ObservableObject {
     }
 }
 
-class MyWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler, WKScriptMessageHandlerWithReply {
+class MyWebViewController: NSViewController, WKNavigationDelegate, WKScriptMessageHandler, WKScriptMessageHandlerWithReply {
     var myWebView_: WKWebView? = nil
     let myTestMsgName: String = "myTestMsgName"
     let myTestMsgNameWithReply: String = "myTestMsgNameWithReply"
@@ -45,7 +45,7 @@ class MyWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessa
         configuration.userContentController.addScriptMessageHandler(self, contentWorld: .page, name: self.myTestMsgNameWithReply)
         let userScript = WKUserScript(source: "console.log(\"WKWebView user script test!\")", injectionTime: .atDocumentStart, forMainFrameOnly: false)
         configuration.userContentController.addUserScript(userScript)
-        self.view = self.myWebView_
+        self.view = self.myWebView_ ?? self.view
     }
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
@@ -102,7 +102,7 @@ class MyWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessa
     }
 }
 
-struct MyWebViewControllerRep: UIViewControllerRepresentable {
+struct MyWebViewControllerRep: NSViewControllerRepresentable {
     var vcLink: MyWebViewLink
     
     class Coordinator {
@@ -125,12 +125,12 @@ struct MyWebViewControllerRep: UIViewControllerRepresentable {
         return Coordinator()
     }
     
-    func makeUIViewController(context: Context) -> MyWebViewController {
+    func makeNSViewController(context: Context) -> MyWebViewController {
         let controller = MyWebViewController()
         return controller
     }
     
-    func updateUIViewController(_ uiViewController: MyWebViewController, context: Context) {
+    func updateNSViewController(_ uiViewController: MyWebViewController, context: Context) {
         context.coordinator.viewController = uiViewController
         context.coordinator.vcLink = vcLink
         if let url = URL(string: "http://127.0.0.1:9090/") {
@@ -138,5 +138,5 @@ struct MyWebViewControllerRep: UIViewControllerRepresentable {
         }
     }
     
-    typealias UIViewControllerType = MyWebViewController
+    typealias NSViewControllerType = MyWebViewController
 }
