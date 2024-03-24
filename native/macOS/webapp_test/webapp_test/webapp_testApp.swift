@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct webapp_testApp: App {
     var body: some Scene {
-        WindowGroup {
+        Window("Main Window", id: "main-window") {
             ContentView()
         }
     }
