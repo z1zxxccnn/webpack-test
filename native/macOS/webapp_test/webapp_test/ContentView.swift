@@ -9,13 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var vcLink = MyWebViewLink()
+    @State private var window: NSWindow?
     var body: some View {
-        MyWebViewControllerRep(vcLink: vcLink)
+        MyWebViewControllerRep(vcLink: vcLink, window: $window)
             .ignoresSafeArea(edges: .all)
             .onReceive(NotificationCenter.default.publisher(for: NSApplication.willTerminateNotification), perform: { _ in
                 print("receive willTerminateNotification")
                 vcLink.willTerminate()
             })
+            .task {
+                print("swiftui main window: \(String(describing: window))")
+            }
     }
 }
 

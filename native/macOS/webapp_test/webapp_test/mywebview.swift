@@ -104,6 +104,7 @@ class MyWebViewController: NSViewController, WKNavigationDelegate, WKScriptMessa
 
 struct MyWebViewControllerRep: NSViewControllerRepresentable {
     var vcLink: MyWebViewLink
+    @Binding var window: NSWindow?
     
     class Coordinator {
         var vcLink: MyWebViewLink? {
@@ -127,6 +128,10 @@ struct MyWebViewControllerRep: NSViewControllerRepresentable {
     
     func makeNSViewController(context: Context) -> MyWebViewController {
         let controller = MyWebViewController()
+        DispatchQueue.main.async {
+            window = controller.view.window // << right after inserted in window
+            print("rep main window: \(String(describing: window))")
+        }
         return controller
     }
     
