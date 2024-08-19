@@ -16,20 +16,28 @@ enum MyWebViewAction {
 
 class MyWebViewLink: ObservableObject {
     @Published var action: MyWebViewAction?
+    @Published var isShowTestBtn = false
     
     func willTerminate() {
         action = .willTerminate
     }
+    
+    func setShowTestBtn(isOn: Bool) {
+        isShowTestBtn = isOn
+    }
 }
 
 class MyWebViewController: NSViewController, WKNavigationDelegate, WKScriptMessageHandler, WKScriptMessageHandlerWithReply {
+    var vcLink: MyWebViewLink? = nil
     var myWebView_: WKWebView? = nil
     let myTestMsgName: String = "myTestMsgName"
     let myTestMsgNameWithReply: String = "myTestMsgNameWithReply"
     
     func action(_ action: MyWebViewAction) {
         print("MyWebViewController execute action: \(action)")
-        self.cleanWebViewCache()
+        if action == .willTerminate {
+            self.cleanWebViewCache()
+        }
     }
     
     override func loadView() {
@@ -79,6 +87,7 @@ class MyWebViewController: NSViewController, WKNavigationDelegate, WKScriptMessa
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         if message.name == self.myTestMsgName {
             print("call \(self.myTestMsgName) message body: \(message.body)")
+            vcLink?.setShowTestBtn(isOn: true)
         }
     }
     
@@ -86,6 +95,7 @@ class MyWebViewController: NSViewController, WKNavigationDelegate, WKScriptMessa
         if message.name == self.myTestMsgNameWithReply {
             print("call \(self.myTestMsgNameWithReply) message body: \(message.body)")
             replyHandler("This is a reply from \(self.myTestMsgNameWithReply)", nil)
+            vcLink?.setShowTestBtn(isOn: true)
         }
     }
     
@@ -128,6 +138,7 @@ struct MyWebViewControllerRep: NSViewControllerRepresentable {
     
     func makeNSViewController(context: Context) -> MyWebViewController {
         let controller = MyWebViewController()
+        controller.vcLink = vcLink
         DispatchQueue.main.async {
             window = controller.view.window // << right after inserted in window
             print("rep main window: \(String(describing: window))")
@@ -135,11 +146,11 @@ struct MyWebViewControllerRep: NSViewControllerRepresentable {
         return controller
     }
     
-    func updateNSViewController(_ uiViewController: MyWebViewController, context: Context) {
-        context.coordinator.viewController = uiViewController
+    func updateNSViewController(_ nsViewController: MyWebViewController, context: Context) {
+        context.coordinator.viewController = nsViewController
         context.coordinator.vcLink = vcLink
         if let url = URL(string: "http://127.0.0.1:9090/") {
-            uiViewController.myWebView_?.load(URLRequest(url: url))
+            nsViewController.myWebView_?.load(URLRequest(url: url))
         }
     }
     

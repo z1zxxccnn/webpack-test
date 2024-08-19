@@ -16,20 +16,28 @@ enum MyWebViewAction {
 
 class MyWebViewLink: ObservableObject {
     @Published var action: MyWebViewAction?
+    @Published var isShowTestBtn = false
     
     func willTerminate() {
         action = .willTerminate
     }
+    
+    func setShowTestBtn(isOn: Bool) {
+        isShowTestBtn = isOn
+    }
 }
 
 class MyWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler, WKScriptMessageHandlerWithReply {
+    var vcLink: MyWebViewLink? = nil
     var myWebView_: WKWebView? = nil
     let myTestMsgName: String = "myTestMsgName"
     let myTestMsgNameWithReply: String = "myTestMsgNameWithReply"
     
     func action(_ action: MyWebViewAction) {
         print("MyWebViewController execute action: \(action)")
-        self.cleanWebViewCache()
+        if action == .willTerminate {
+            self.cleanWebViewCache()
+        }
     }
     
     override func loadView() {
@@ -79,6 +87,7 @@ class MyWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessa
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         if message.name == self.myTestMsgName {
             print("call \(self.myTestMsgName) message body: \(message.body)")
+            vcLink?.setShowTestBtn(isOn: true)
         }
     }
     
@@ -86,6 +95,7 @@ class MyWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessa
         if message.name == self.myTestMsgNameWithReply {
             print("call \(self.myTestMsgNameWithReply) message body: \(message.body)")
             replyHandler("This is a reply from \(self.myTestMsgNameWithReply)", nil)
+            vcLink?.setShowTestBtn(isOn: true)
         }
     }
     
@@ -127,6 +137,7 @@ struct MyWebViewControllerRep: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> MyWebViewController {
         let controller = MyWebViewController()
+        controller.vcLink = vcLink
         return controller
     }
     
