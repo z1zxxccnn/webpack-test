@@ -208,6 +208,10 @@ export function createTestPanel (): void {
 
   testContentCreate(module.test_panel_root_content)
 
+  const mainDivInputTest = document.createElement('input')
+  mainDivContent.id = module.test_panel_root_input_test
+  mainDiv.appendChild(mainDivInputTest)
+
   dragElement(mainDiv, mainDivHeaderMove, true)
   dragElement(mainDiv, mainDivHeaderResize, false)
 }
