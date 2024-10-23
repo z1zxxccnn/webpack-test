@@ -50,7 +50,7 @@ class CustomWebViewClient : WebViewClient() {
     }
 }
 
-class AndroidJSInterface(private val context: Context, private val activity: Activity?) {
+class AndroidJSInterface(private val context: Context) {
 
     /** Show a toast from the web page  */
     @JavascriptInterface
@@ -60,7 +60,7 @@ class AndroidJSInterface(private val context: Context, private val activity: Act
 
     @JavascriptInterface
     fun exitApp() {
-        activity?.finish()
+        (context as Activity)?.finish()
     }
 
     @JavascriptInterface
@@ -79,9 +79,7 @@ fun MyContent() {
     // Declare a string that contains a url
     val mUrl = "http://127.0.0.1:9090/"
 
-    val activity = (LocalContext.current as? Activity)
-
-    var view: MutableState<WebView?> = remember { mutableStateOf(null) }
+    val view: MutableState<WebView?> = remember { mutableStateOf(null) }
 
     // Adding a WebView inside AndroidView
     // with layout as full screen
@@ -98,7 +96,7 @@ fun MyContent() {
 
             settings.javaScriptEnabled = true
 
-            addJavascriptInterface(AndroidJSInterface(it, activity), "Android")
+            addJavascriptInterface(AndroidJSInterface(it), "Android")
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 WebView.setWebContentsDebuggingEnabled(true)
@@ -124,6 +122,5 @@ fun MyContent() {
 @Composable
 fun GreetingPreview() {
     Webapp_testTheme {
-        MyContent()
     }
 }
