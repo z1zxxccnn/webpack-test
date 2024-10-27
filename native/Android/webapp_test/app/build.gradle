@@ -47,6 +47,8 @@ android {
 }
 
 task adbReverse9090(type: Exec) {
+    println "call adbReverse9090"
+    println "ANDROID_HOME: $System.env.ANDROID_HOME"
     def rootDir = project.rootDir
     def localProperties = new File(rootDir, "local.properties")
     if (localProperties.exists()) {
@@ -55,6 +57,7 @@ task adbReverse9090(type: Exec) {
             instr -> properties.load(instr)
         }
         def sdkDir = properties.getProperty('sdk.dir')
+        println "sdkDir: $sdkDir"
         def adb = "$sdkDir/platform-tools/adb"
         commandLine "$adb", 'reverse', 'tcp:9090', 'tcp:9090'
     }
