@@ -12,23 +12,45 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.webapp_test.ui.theme.Webapp_testTheme
 
 
+class MyViewModel : ViewModel() {
+    private val _showTestBtn = MutableLiveData(false)
+    val showTestBtn: LiveData<Boolean> = _showTestBtn
+
+    fun updateShowTestBtn(on: Boolean) {
+        _showTestBtn.postValue(on)
+    }
+}
+
 class MainActivity : ComponentActivity() {
+    private val myViewModel by viewModels<MyViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             Webapp_testTheme {
-                MyContent()
+                MyContent(myViewModel = myViewModel)
             }
         }
     }
@@ -50,8 +72,10 @@ class CustomWebViewClient : WebViewClient() {
     }
 }
 
-class AndroidJSInterface(private val context: Context) {
-
+class AndroidJSInterface(
+    private val context: Context,
+    private val myViewModel: MyViewModel
+) {
     /** Show a toast from the web page  */
     @JavascriptInterface
     fun showToast(toast: String?) {
@@ -60,12 +84,17 @@ class AndroidJSInterface(private val context: Context) {
 
     @JavascriptInterface
     fun exitApp() {
-        (context as Activity)?.finish()
+        (context as Activity).finish()
     }
 
     @JavascriptInterface
     fun testCall(msg: String): String {
         return "return from kotlin: $msg"
+    }
+
+    @JavascriptInterface
+    fun showTestBtn() {
+        myViewModel.updateShowTestBtn(true)
     }
 }
 
@@ -74,40 +103,51 @@ class AndroidJSInterface(private val context: Context) {
 // Calling this function as
 // content in the above function
 @Composable
-fun MyContent() {
-
+fun MyContent(myViewModel: MyViewModel) {
     // Declare a string that contains a url
     val mUrl = "http://127.0.0.1:9090/"
 
+    val showTestBtn by myViewModel.showTestBtn.observeAsState()
+
     val view: MutableState<WebView?> = remember { mutableStateOf(null) }
 
-    // Adding a WebView inside AndroidView
-    // with layout as full screen
-    AndroidView(factory = {
-        WebView(it).apply {
-            view.value = this
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Adding a WebView inside AndroidView
+        // with layout as full screen
+        AndroidView(factory = {
+            WebView(it).apply {
+                view.value = this
 
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
 
-            webViewClient = CustomWebViewClient()
+                webViewClient = CustomWebViewClient()
 
-            settings.javaScriptEnabled = true
+                settings.javaScriptEnabled = true
 
-            addJavascriptInterface(AndroidJSInterface(it), "Android")
+                addJavascriptInterface(AndroidJSInterface(it, myViewModel), "Android")
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                WebView.setWebContentsDebuggingEnabled(true)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    WebView.setWebContentsDebuggingEnabled(true)
+                }
+
+                clearCache(true)
+                println("WebView enters the Composition")
             }
-
-            clearCache(true)
-            println("WebView enters the Composition")
+        }, update = {
+            it.loadUrl(mUrl)
+        }, modifier = Modifier.weight(1f))
+        if (showTestBtn == true) {
+            Button(onClick = { myViewModel.updateShowTestBtn(false) }) {
+                Text(text = "TEST")
+            }
         }
-    }, update = {
-        it.loadUrl(mUrl)
-    })
+    }
 
     DisposableEffect(view) {
         onDispose {
