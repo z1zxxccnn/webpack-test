@@ -54,6 +54,14 @@ class MyWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessa
         let userScript = WKUserScript(source: "console.log(\"WKWebView user script test!\")", injectionTime: .atDocumentStart, forMainFrameOnly: false)
         configuration.userContentController.addUserScript(userScript)
         self.view = self.myWebView_
+        
+        let source: String = "var meta = document.createElement('meta');" +
+        "meta.name = 'viewport';" +
+        "meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';" +
+        "var head = document.getElementsByTagName('head')[0];" +
+        "head.appendChild(meta);"
+        let disableZoom = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
+        configuration.userContentController.addUserScript(disableZoom)
     }
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
