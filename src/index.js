@@ -1,7 +1,7 @@
 import './style.css'
 import CsvData from './data.csv'
 
-import { mainEntry } from './mainapp/entry'
+// import { mainEntry } from './mainapp/entry'
 
 // if ('serviceWorker' in navigator) {
 //   window.addEventListener('load', () => {
@@ -34,7 +34,7 @@ function btnOnClick () {
     })
 }
 
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 function component () {
   const element = document.createElement('div')
   element.id = 'test_div'
@@ -52,6 +52,6 @@ function component () {
   document.body.appendChild(element)
 }
 
-// component()
+component()
 
-mainEntry()
+// mainEntry()

@@ -1,12 +1,17 @@
 module.exports = {
-  plugins: ['react', 'react-hooks'],
+  plugins: ['react', 'react-hooks', '@typescript-eslint'],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
-    'standard-with-typescript',
-    'react-app'
+    'plugin:@typescript-eslint/recommended'
   ],
+  settings: {
+    react: {
+      version: 'detect'
+    }
+  },
+  parser: '@typescript-eslint/parser',
   rules: {
     'max-len': [
       'error',
