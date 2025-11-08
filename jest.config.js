@@ -29,5 +29,5 @@ module.exports = {
     '.+\\.(svg|png|jpg|jpeg|gif)$': '<rootDir>/src/__mocks__/file-mock.js'
   },
   // Tells Jest what folders to ignore for tests
-  testPathIgnorePatterns: ['node_modules', 'dist']
+  testPathIgnorePatterns: ['node_modules', 'native', 'dist']
 }

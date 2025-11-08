@@ -28,7 +28,8 @@ module.exports = (env, argv) => {
         favicon: './src/favicon.svg'
       }),
       new ESLintPlugin({
-        extensions: ['.tsx', '.ts', '.jsx', '.js']
+        extensions: ['.tsx', '.ts', '.jsx', '.js'],
+        exclude: ['node_modules', 'native']
       })
       /*
       // Must be accessed via http://127.0.0.1:8080
@@ -67,12 +68,12 @@ module.exports = (env, argv) => {
         {
           test: /\.tsx?$/i,
           use: ['babel-loader', 'ts-loader'],
-          exclude: /node_modules/
+          exclude: [/node_modules/, /native/]
         },
         {
           test: /\.jsx?$/i,
           use: ['babel-loader'],
-          exclude: /node_modules/
+          exclude: [/node_modules/, /native/]
         },
         {
           test: /\.(scss|css)$/i,
@@ -85,15 +86,18 @@ module.exports = (env, argv) => {
                 api: 'modern'
               }
             }
-          ]
+          ],
+          exclude: /native/
         },
         {
           test: /\.(svg|png|jpg|jpeg|gif)$/i,
-          type: 'asset/resource'
+          type: 'asset/resource',
+          exclude: /native/
         },
         {
           test: /\.(csv|tsv)$/i,
-          use: ['csv-loader']
+          use: ['csv-loader'], 
+          exclude: /native/
         }
       ]
     },
