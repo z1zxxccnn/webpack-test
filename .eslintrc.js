@@ -27,7 +27,8 @@ module.exports = {
       }
     ],
     'jsx-quotes': ['error', 'prefer-double'],
-    'react/react-in-jsx-scope': 0
+    'react/react-in-jsx-scope': 0,
+    'no-trailing-spaces': 'error'
   },
   // The parserOptions described in the official documentation are for
   // the default parser and are not necessarily supported by other parsers.

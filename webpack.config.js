@@ -96,7 +96,7 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.(csv|tsv)$/i,
-          use: ['csv-loader'], 
+          use: ['csv-loader'],
           exclude: /native/
         }
       ]
